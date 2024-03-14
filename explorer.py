@@ -73,9 +73,9 @@ with st.expander("Overall results", expanded=True):
 
 
 
-    col1, col2, col3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
+    tab1, tab2, tab3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
 
-    with col1:
+    with tab1:
         st.multiselect(
             label="Select linguistic competencies to analyze",
             options=st.session_state["linguistic_competencies"],
@@ -89,7 +89,7 @@ with st.expander("Overall results", expanded=True):
         fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Competencies Comparison")
         st.plotly_chart(fig)
 
-    with col2:
+    with tab2:
         st.multiselect(
             label="Select linguistic phenomena to analyze",
             options=st.session_state["linguistic_phenomena"],
@@ -103,7 +103,7 @@ with st.expander("Overall results", expanded=True):
         fig = get_polar_plot(data=relevant_phenomena_data, target_column='linguistic phenomena', title="Phenomena Comparison")
         st.plotly_chart(fig)
 
-    with col3:
+    with tab3:
 
         st.multiselect(
             label="Select datasets to analyze",
@@ -186,7 +186,10 @@ st.markdown("""
 """)
 
 
-with st.expander("Morphology results", expanded=False):
+tab_morphology, tab_syntax, tab_semantics, tab_reasoning, tab_discourse = st.tabs(["Morphology", "Syntax", "Semantics", "Reasoning", "Discourse"])
+
+
+with tab_morphology:
     morphology_rankings = rankings[rankings["linguistic competencies"] == "morphology"]
     morphology_rankings = morphology_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
     morphology_rankings = update_rankings(morphology_rankings, selected_models)
@@ -197,7 +200,7 @@ with st.expander("Morphology results", expanded=False):
 
 
 
-with st.expander("Syntax results", expanded=False):
+with tab_syntax:
     syntax_rankings = rankings[rankings["linguistic competencies"] == "syntax"]
     syntax_rankings = syntax_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
     syntax_rankings = update_rankings(syntax_rankings, selected_models)
@@ -207,7 +210,7 @@ with st.expander("Syntax results", expanded=False):
     st.write(styled_rankings.to_html(), unsafe_allow_html=True)
 
 
-with st.expander("Semantics results", expanded=False):
+with tab_semantics:
     semantics_rankings = rankings[rankings["linguistic competencies"] == "semantics"]
     semantics_rankings = semantics_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
     semantics_rankings = update_rankings(semantics_rankings, selected_models)
@@ -217,7 +220,7 @@ with st.expander("Semantics results", expanded=False):
     st.write(styled_rankings.to_html(), unsafe_allow_html=True)
 
 
-with st.expander("Reasoning results", expanded=False):
+with tab_reasoning:
     reasoning_rankings = rankings[rankings["linguistic competencies"] == "reasoning"]
     reasoning_rankings = reasoning_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
     reasoning_rankings = update_rankings(reasoning_rankings, selected_models)
@@ -227,7 +230,7 @@ with st.expander("Reasoning results", expanded=False):
     st.write(styled_rankings.to_html(), unsafe_allow_html=True)
 
 
-with st.expander("Discourse results", expanded=False):
+with tab_discourse:
     discourse_rankings = rankings[rankings["linguistic competencies"] == "discourse"]
     discourse_rankings = discourse_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
     discourse_rankings = update_rankings(discourse_rankings, selected_models)
