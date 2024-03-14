@@ -91,11 +91,6 @@ st.sidebar.selectbox(
     default=["pos", "xpos", "upos"]
 )
 
-table_option = st.sidebar.selectbox(
-    'Table Rendering',
-    ('Styled', 'Filterable')
-)
-
 
 with st.expander("Overall results", expanded=True):
 
