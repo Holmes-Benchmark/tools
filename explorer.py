@@ -80,11 +80,7 @@ st.multiselect(
 
 
 
-
 selected_models = st.session_state["selected_models"]
-
-
-
 
 tab1, tab2, tab3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
 
@@ -103,7 +99,6 @@ with tab1:
     st.plotly_chart(fig)
 
 with tab2:
-
     st.multiselect(
         label="Select linguistic phenomena to analyze",
         options=st.session_state["linguistic_phenomena"],
@@ -118,7 +113,6 @@ with tab2:
     st.plotly_chart(fig)
 
 with tab3:
-
     st.multiselect(
         label="Select datasets to analyze",
         options=st.session_state["probing_datasets"],

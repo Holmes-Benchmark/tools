@@ -1,11 +1,33 @@
 import pandas
 import streamlit as st
+from PIL import Image
 
 from utils import read_data, get_rankings
 
-st.set_page_config(layout="wide")
-st.title("Holmes Leaderboard")
+im = Image.open("images/holmes_leaderboard_icon.png")
 
+st.set_page_config(
+    layout="wide",
+    page_icon=im,
+)
+st.image("images/holmes_leaderboard.svg", width=400)
+st.markdown("""
+    This is the leaderboard of the Holmes 🔎 benchmark. 
+    We report for the every language models its averaged rank.
+    Either considering all probing datasets or one of the five groups of specific linguistic competencies.
+    
+    You can select either Holmes 🔎 or it streamlined version FlashHolmes ⚡.
+    Further, you can choose to consider only non licensed datasets or all of them, and how you wish to sort the table.
+""")
+
+
+holmes_version = st.selectbox("Select Holmes Version", options=["Holmes", "FlashHolmes"])
+free_holmes = st.checkbox("Only Freely-Available Datasets")
+
+sort_by = st.selectbox(
+    "Select Columns to Sort",
+    ["overall", "params", "morphology", "syntax", "semantics", "reasoning", "discourse"]
+)
 
 parameters = {
     'sentence-transformers/average_word_embeddings_glove.6B.300d': 300,
@@ -122,8 +144,6 @@ architecture = {
     'mistralai/Mixtral-8x7B-v0.1': "decoder",
 }
 
-holmes_version = st.sidebar.selectbox("Select Holmes Version", options=["Holmes", "FlashHolmes"])
-free_holmes = st.sidebar.checkbox("Only Freely-Available Datasets")
 
 if free_holmes:
     holmes_version = f"Free{holmes_version}"
@@ -181,7 +201,7 @@ def style_leaderboard(leaderboard):
 
 
 with st.expander("Leaderboard", expanded=True):
-    leaderboard = leaderboard.sort_values("overall", ascending=False)
+    leaderboard = leaderboard.sort_values(sort_by, ascending=False)
 
     styled_leaderboard = style_leaderboard(leaderboard)
 

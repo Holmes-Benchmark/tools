@@ -1,3 +1,3 @@
 from streamlit.web.bootstrap import run
-real_script = 'pages/leaderboard.py'
+real_script = 'leaderboard.py'
 run(real_script, False, [], {})
