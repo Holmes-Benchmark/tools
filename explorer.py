@@ -5,6 +5,9 @@ from scipy.stats import kendalltau
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
+if 'sidebar_state' not in st.session_state:
+    st.session_state.sidebar_state = 'expanded'
+
 st.set_page_config(layout="wide")
 st.title("Holmes Explorer")
 
@@ -81,6 +84,17 @@ st.sidebar.multiselect(
     default=["pos", "xpos", "upos"]
 )
 
+st.sidebar.selectbox(
+    label="Select datasets to analyze",
+    options=st.session_state["probing_datasets"],
+    key="selected_datasets",
+    default=["pos", "xpos", "upos"]
+)
+
+table_option = st.sidebar.selectbox(
+    'Table Rendering',
+    ('Styled', 'Filterable')
+)
 
 
 with st.expander("Overall results", expanded=True):
@@ -174,7 +188,7 @@ def style_rankings(rankings, selected_models):
 st.markdown("""
     ### Competencies Details
     
-    In the second part shows details of different `competencies` separately. This includes the `winning rate` for a specific model and the `probing datasets` under test. In addition, `deviation` tells how much the selected language models deviate among each other for a specfic `probing dataset`. With `discriminability`, we report the agreement of a given `probing dataset` with the average rankings of the specific `linguistic competence`. For example, `discriminability=1` means that the model rankings of the specific `probing dataset` agrees 100% with average rankings of the specific `linguistic competence`.     
+    The second part shows details of `competencies` separately. This includes the `winning rate` for a specific model and the `probing datasets` under test. In addition, `deviation` tells how much the selected language models deviate among each other for a specfic `probing dataset`. With `discriminability`, we report the agreement of a given `probing dataset` with the average rankings of the specific `linguistic competence`. For example, `discriminability=1` means that the model rankings of the specific `probing dataset` agrees 100% with average rankings of the specific `linguistic competence`.     
 """)
 
 
@@ -227,4 +241,5 @@ with st.expander("Discourse results", expanded=False):
     styled_rankings = style_rankings(discourse_rankings, selected_models)
 
     st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+
 
