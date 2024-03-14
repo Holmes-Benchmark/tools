@@ -1,3 +1,5 @@
+import logging
+
 import pandas
 import seaborn as sns
 import streamlit as st
@@ -33,7 +35,7 @@ def update_rankings(rankings, selected_models, add_average=True, sort_by="probin
     rankings = rankings.sort_values(sort_by)
 
     if filter_string != "":
-        print(filter_string)
+        logging.info(filter_string)
         rankings = rankings[rankings.apply(lambda r: r.str.contains(filter_string, case=False).any(), axis=1)]
 
     if add_average:
