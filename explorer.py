@@ -5,9 +5,6 @@ from scipy.stats import kendalltau
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
-if 'sidebar_state' not in st.session_state:
-    st.session_state.sidebar_state = 'expanded'
-
 st.set_page_config(layout="wide")
 st.title("Holmes Explorer")
 
