@@ -2,6 +2,7 @@ import pandas
 import seaborn as sns
 import streamlit as st
 from scipy.stats import kendalltau
+from st_keyup import st_keyup
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
@@ -22,7 +23,7 @@ st.markdown("""
 
 
 
-def update_rankings(rankings, selected_models, add_average=True, sort_by="probing dataset"):
+def update_rankings(rankings, selected_models, add_average=True, sort_by="probing dataset", filter_string=""):
     rankings[selected_models] = rankings[selected_models] * 100
 
     mean_ranking = rankings[selected_models].mean(axis=0).values
@@ -30,6 +31,9 @@ def update_rankings(rankings, selected_models, add_average=True, sort_by="probin
     rankings["discriminability"] = rankings.apply(lambda row: kendalltau(mean_ranking, row[selected_models].values).pvalue, axis=1).fillna(0)
 
     rankings = rankings.sort_values(sort_by)
+
+    if filter_string != "":
+        rankings = rankings[rankings.apply(lambda r: r.str.contains(filter_string, case=False).any(), axis=1)]
 
     if add_average:
         average = dict(rankings.mean(numeric_only=True))
@@ -195,10 +199,14 @@ sort_by = st.selectbox(
     ["probing dataset", "linguistic phenomena"] + selected_models + ["deviation", "discriminability"]
 )
 
+
+
 with tab_morphology:
+    st_keyup(label="Filter Morphology Table", debounce=500, placeholder="Argumente durchsuchen", key="morphology_filter")
+
     morphology_rankings = rankings[rankings["linguistic competencies"] == "morphology"]
     morphology_rankings = morphology_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    morphology_rankings = update_rankings(morphology_rankings, selected_models, sort_by=sort_by)
+    morphology_rankings = update_rankings(morphology_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["morphology_filter"])
 
     styled_rankings = style_rankings(morphology_rankings, selected_models)
 
@@ -207,9 +215,11 @@ with tab_morphology:
 
 
 with tab_syntax:
+    st_keyup(label="Filter Syntax Table", debounce=500, placeholder="Type filter string...", key="syntax_filter")
+
     syntax_rankings = rankings[rankings["linguistic competencies"] == "syntax"]
     syntax_rankings = syntax_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    syntax_rankings = update_rankings(syntax_rankings, selected_models, sort_by=sort_by)
+    syntax_rankings = update_rankings(syntax_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["syntax_filter"])
 
     styled_rankings = style_rankings(syntax_rankings, selected_models)
 
@@ -217,9 +227,11 @@ with tab_syntax:
 
 
 with tab_semantics:
+    st_keyup(label="Filter Semantics Table", debounce=500, placeholder="Type filter string...", key="semantics_filter")
+
     semantics_rankings = rankings[rankings["linguistic competencies"] == "semantics"]
     semantics_rankings = semantics_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    semantics_rankings = update_rankings(semantics_rankings, selected_models, sort_by=sort_by)
+    semantics_rankings = update_rankings(semantics_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["semantics_filter"])
 
     styled_rankings = style_rankings(semantics_rankings, selected_models)
 
@@ -227,9 +239,11 @@ with tab_semantics:
 
 
 with tab_reasoning:
+    st_keyup(label="Filter Reasoning Table", debounce=500, placeholder="Type filter string...", key="reasoning_filter")
+
     reasoning_rankings = rankings[rankings["linguistic competencies"] == "reasoning"]
     reasoning_rankings = reasoning_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    reasoning_rankings = update_rankings(reasoning_rankings, selected_models, sort_by=sort_by)
+    reasoning_rankings = update_rankings(reasoning_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["reasoning_filter"])
 
     styled_rankings = style_rankings(reasoning_rankings, selected_models)
 
@@ -237,9 +251,11 @@ with tab_reasoning:
 
 
 with tab_discourse:
+    st_keyup(label="Filter Discourse Table", debounce=500, placeholder="Type filter string...", key="discourse_filter")
+
     discourse_rankings = rankings[rankings["linguistic competencies"] == "discourse"]
     discourse_rankings = discourse_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    discourse_rankings = update_rankings(discourse_rankings, selected_models, sort_by=sort_by)
+    discourse_rankings = update_rankings(discourse_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["discourse_filter"])
 
     styled_rankings = style_rankings(discourse_rankings, selected_models)
 
