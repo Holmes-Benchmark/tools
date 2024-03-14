@@ -12,7 +12,7 @@ from pandas.io.formats.style import Styler
 from st_keyup import st_keyup
 import redis
 
-from app.pages.utils import read_data, get_rankings, aggregate_results, get_polar_plot
+from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
 st.set_page_config(layout="wide")
 st.title("Holmes Explorer")

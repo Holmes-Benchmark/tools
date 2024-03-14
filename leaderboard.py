@@ -12,7 +12,7 @@ from st_aggrid import AgGrid, AgGridTheme
 from st_keyup import st_keyup
 import redis
 
-from app.pages.utils import read_data, get_rankings, aggregate_results
+from utils import read_data, get_rankings, aggregate_results
 
 st.set_page_config(layout="wide")
 st.title("Holmes Leaderboard")
