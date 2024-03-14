@@ -39,7 +39,7 @@ def get_rankings(data, model_columns):
 def get_polar_plot(data, target_column, title):
     return px.line_polar(
         data, r='score', theta=target_column, markers=True,
-        line_close=True, color="model", width=500, title=title
+        line_close=True, color="model", width=600, title=title
     )
 
 
