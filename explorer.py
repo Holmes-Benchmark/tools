@@ -5,6 +5,9 @@ from scipy.stats import kendalltau
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
+if 'sidebar_state' not in st.session_state:
+    st.session_state.sidebar_state = 'expanded'
+
 st.set_page_config(layout="wide")
 st.title("Holmes Explorer")
 
@@ -81,12 +84,6 @@ st.sidebar.multiselect(
     default=["pos", "xpos", "upos"]
 )
 
-st.sidebar.selectbox(
-    label="Select datasets to analyze",
-    options=st.session_state["probing_datasets"],
-    key="selected_datasets",
-    default=["pos", "xpos", "upos"]
-)
 
 
 with st.expander("Overall results", expanded=True):
