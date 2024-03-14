@@ -3,17 +3,22 @@ import logging
 import pandas
 import seaborn as sns
 import streamlit as st
+from PIL import Image
 from scipy.stats import kendalltau
 from st_keyup import st_keyup
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
+im = Image.open("images/holmes_icon.png")
 
-st.set_page_config(layout="wide")
-st.title("Holmes Explorer")
-
+st.set_page_config(
+    layout="wide",
+    page_icon=im,
+)
+#st.title("Holmes Explorer")
+st.image("images/holmes_explorer.svg", width=400)
 st.markdown("""
-    This page allows you do analyze results of Holmes regarding language models and datasets. 
+    This page allows you do analyze results of Holmes 🔎 regarding language models and datasets. 
     
     ### Overall Results
     
@@ -32,9 +37,9 @@ def update_rankings(rankings, selected_models, add_average=True, sort_by="probin
     rankings["deviation"] = rankings[selected_models].std(axis=1)
     rankings["discriminability"] = rankings.apply(lambda row: kendalltau(mean_ranking, row[selected_models].values).pvalue, axis=1).fillna(0)
 
-    rankings = rankings.sort_values(sort_by)
+    rankings = rankings.sort_values(sort_by, ascending=False)
 
-    if filter_string != "":
+    if filter_string != "" and filter_string != None:
         logging.info(filter_string)
         rankings = rankings[rankings.apply(lambda r: r.str.contains(filter_string, case=False).any(), axis=1)]
 
@@ -75,57 +80,57 @@ st.multiselect(
 
 
 
-with st.expander("Overall results", expanded=True):
 
-    selected_models = st.session_state["selected_models"]
-
+selected_models = st.session_state["selected_models"]
 
 
 
-    tab1, tab2, tab3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
 
-    with tab1:
-        st.multiselect(
-            label="Select linguistic competencies to analyze",
-            options=st.session_state["linguistic_competencies"],
-            key="selected_competencies",
-            default=st.session_state["linguistic_competencies"]
-        )
+tab1, tab2, tab3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
 
-        relevant_competencies_data = st.session_state["aggregated_by_competencies"][st.session_state["aggregated_by_competencies"]["model"].isin(selected_models)]
-        relevant_competencies_data = relevant_competencies_data[relevant_competencies_data['linguistic competencies'].isin(st.session_state["selected_competencies"])]
+with tab1:
+    st.multiselect(
+        label="Select linguistic competencies to analyze",
+        options=st.session_state["linguistic_competencies"],
+        key="selected_competencies",
+        default=st.session_state["linguistic_competencies"]
+    )
 
-        fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Competencies Comparison")
-        st.plotly_chart(fig)
+    relevant_competencies_data = st.session_state["aggregated_by_competencies"][st.session_state["aggregated_by_competencies"]["model"].isin(selected_models)]
+    relevant_competencies_data = relevant_competencies_data[relevant_competencies_data['linguistic competencies'].isin(st.session_state["selected_competencies"])]
 
-    with tab2:
-        st.multiselect(
-            label="Select linguistic phenomena to analyze",
-            options=st.session_state["linguistic_phenomena"],
-            key="selected_phenomena",
-            default=["negation", "part-of-speech", "binding"]
-        )
+    fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Competencies Comparison")
+    st.plotly_chart(fig)
 
-        relevant_phenomena_data = st.session_state["aggregated_by_phenomena"][st.session_state["aggregated_by_phenomena"]["model"].isin(selected_models)]
-        relevant_phenomena_data = relevant_phenomena_data[relevant_phenomena_data['linguistic phenomena'].isin(st.session_state["selected_phenomena"])]
+with tab2:
 
-        fig = get_polar_plot(data=relevant_phenomena_data, target_column='linguistic phenomena', title="Phenomena Comparison")
-        st.plotly_chart(fig)
+    st.multiselect(
+        label="Select linguistic phenomena to analyze",
+        options=st.session_state["linguistic_phenomena"],
+        key="selected_phenomena",
+        default=["negation", "part-of-speech", "binding"]
+    )
 
-    with tab3:
+    relevant_phenomena_data = st.session_state["aggregated_by_phenomena"][st.session_state["aggregated_by_phenomena"]["model"].isin(selected_models)]
+    relevant_phenomena_data = relevant_phenomena_data[relevant_phenomena_data['linguistic phenomena'].isin(st.session_state["selected_phenomena"])]
 
-        st.multiselect(
-            label="Select datasets to analyze",
-            options=st.session_state["probing_datasets"],
-            key="selected_datasets",
-            default=["pos", "xpos", "upos"]
-        )
+    fig = get_polar_plot(data=relevant_phenomena_data, target_column='linguistic phenomena', title="Phenomena Comparison")
+    st.plotly_chart(fig)
 
-        relevant_dataset_data = st.session_state["aggregated_by_datasets"][st.session_state["aggregated_by_datasets"]["model"].isin(selected_models)]
-        relevant_dataset_data = relevant_dataset_data[relevant_dataset_data['probing dataset'].isin(st.session_state["selected_datasets"])]
+with tab3:
 
-        fig = get_polar_plot(data=relevant_dataset_data, target_column='probing dataset', title="Dataset Comparison")
-        st.plotly_chart(fig)
+    st.multiselect(
+        label="Select datasets to analyze",
+        options=st.session_state["probing_datasets"],
+        key="selected_datasets",
+        default=["pos", "xpos", "upos"]
+    )
+
+    relevant_dataset_data = st.session_state["aggregated_by_datasets"][st.session_state["aggregated_by_datasets"]["model"].isin(selected_models)]
+    relevant_dataset_data = relevant_dataset_data[relevant_dataset_data['probing dataset'].isin(st.session_state["selected_datasets"])]
+
+    fig = get_polar_plot(data=relevant_dataset_data, target_column='probing dataset', title="Dataset Comparison")
+    st.plotly_chart(fig)
 
 
 rankings = st.session_state["rankings_f1"]
@@ -191,77 +196,101 @@ def style_rankings(rankings, selected_models):
 st.markdown("""
     ### Competencies Details
     
-    The second part shows details of `competencies` separately. This includes the `winning rate` for a specific model and the `probing datasets` under test. In addition, `deviation` tells how much the selected language models deviate among each other for a specfic `probing dataset`. With `discriminability`, we report the agreement of a given `probing dataset` with the average rankings of the specific `linguistic competence`. For example, `discriminability=1` means that the model rankings of the specific `probing dataset` agrees 100% with average rankings of the specific `linguistic competence`.     
+    The second part shows Holmes 🔎 results of `competencies` separately. 
+    This includes the `winning rate` for a specific model and the `probing datasets` under test. 
+    In addition, `deviation` tells how much the selected language models deviate among each other for a specfic `probing dataset`. 
+    With `discriminability`, we report the agreement of a given `probing dataset` with the average rankings of the specific `linguistic competence`. 
+    For example, `discriminability=1` means that the model rankings of the specific `probing dataset` agrees 100% with average rankings of the specific `linguistic competence`. 
+    
+    Bellow you can choose how to sort the tables and/or filter out rows not containing specific strings. 
 """)
 
 
-tab_morphology, tab_syntax, tab_semantics, tab_reasoning, tab_discourse = st.tabs(["Morphology", "Syntax", "Semantics", "Reasoning", "Discourse"])
 
 sort_by = st.selectbox(
     "Select Columns to Sort",
     ["probing dataset", "linguistic phenomena"] + selected_models + ["deviation", "discriminability"]
 )
 
+filter_string = st.text_input(
+    "Type filter string 👇",
+    placeholder="Some filter ....",
+)
 
+tab_morphology, tab_syntax, tab_semantics, tab_reasoning, tab_discourse = st.tabs(["Morphology", "Syntax", "Semantics", "Reasoning", "Discourse"])
 
 with tab_morphology:
-    st_keyup(label="Filter Morphology Table", debounce=500, placeholder="Argumente durchsuchen", key="morphology_filter")
-
     morphology_rankings = rankings[rankings["linguistic competencies"] == "morphology"]
     morphology_rankings = morphology_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    morphology_rankings = update_rankings(morphology_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["morphology_filter"])
+    n_datasets = morphology_rankings.shape[0]
+    morphology_rankings = update_rankings(morphology_rankings, selected_models, sort_by=sort_by, filter_string=filter_string)
+    n_filtered_datasets = morphology_rankings.shape[0] - 1
 
-    styled_rankings = style_rankings(morphology_rankings, selected_models)
-
-    st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    if morphology_rankings.shape[0] > 1:
+        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
+        styled_rankings = style_rankings(morphology_rankings, selected_models)
+        st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    else:
+        st.text("No rows match, please change filter string")
 
 
 
 with tab_syntax:
-    st_keyup(label="Filter Syntax Table", debounce=500, placeholder="Type filter string...", key="syntax_filter")
-
     syntax_rankings = rankings[rankings["linguistic competencies"] == "syntax"]
     syntax_rankings = syntax_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    syntax_rankings = update_rankings(syntax_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["syntax_filter"])
+    n_datasets = syntax_rankings.shape[0]
+    syntax_rankings = update_rankings(syntax_rankings, selected_models, sort_by=sort_by, filter_string=filter_string)
+    n_filtered_datasets = syntax_rankings.shape[0] - 1
 
-    styled_rankings = style_rankings(syntax_rankings, selected_models)
-
-    st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    if syntax_rankings.shape[0] > 1:
+        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
+        styled_rankings = style_rankings(syntax_rankings, selected_models)
+        st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    else:
+        st.text("No rows match, please change filter string")
 
 
 with tab_semantics:
-    st_keyup(label="Filter Semantics Table", debounce=500, placeholder="Type filter string...", key="semantics_filter")
-
     semantics_rankings = rankings[rankings["linguistic competencies"] == "semantics"]
     semantics_rankings = semantics_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    semantics_rankings = update_rankings(semantics_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["semantics_filter"])
+    n_datasets = semantics_rankings.shape[0]
+    semantics_rankings = update_rankings(semantics_rankings, selected_models, sort_by=sort_by, filter_string=filter_string)
+    n_filtered_datasets = semantics_rankings.shape[0] - 1
 
-    styled_rankings = style_rankings(semantics_rankings, selected_models)
-
-    st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    if semantics_rankings.shape[0] > 1:
+        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **{filter_string}**")
+        styled_rankings = style_rankings(semantics_rankings, selected_models)
+        st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    else:
+        st.text("No rows match, please change filter string")
 
 
 with tab_reasoning:
-    st_keyup(label="Filter Reasoning Table", debounce=500, placeholder="Type filter string...", key="reasoning_filter")
-
     reasoning_rankings = rankings[rankings["linguistic competencies"] == "reasoning"]
     reasoning_rankings = reasoning_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    reasoning_rankings = update_rankings(reasoning_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["reasoning_filter"])
+    n_datasets = reasoning_rankings.shape[0]
+    reasoning_rankings = update_rankings(reasoning_rankings, selected_models, sort_by=sort_by, filter_string=filter_string)
+    n_filtered_datasets = reasoning_rankings.shape[0] - 1
 
-    styled_rankings = style_rankings(reasoning_rankings, selected_models)
-
-    st.write(styled_rankings.to_html(), unsafe_allow_html=True)
-
+    if reasoning_rankings.shape[0] > 1:
+        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **{filter_string}**")
+        styled_rankings = style_rankings(reasoning_rankings, selected_models)
+        st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    else:
+        st.text("No rows match, please change filter string")
 
 with tab_discourse:
-    st_keyup(label="Filter Discourse Table", debounce=500, placeholder="Type filter string...", key="discourse_filter")
-
     discourse_rankings = rankings[rankings["linguistic competencies"] == "discourse"]
     discourse_rankings = discourse_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    discourse_rankings = update_rankings(discourse_rankings, selected_models, sort_by=sort_by, filter_string=st.session_state["discourse_filter"])
+    n_datasets = discourse_rankings.shape[0]
+    discourse_rankings = update_rankings(discourse_rankings, selected_models, sort_by=sort_by, filter_string=filter_string)
+    n_filtered_datasets = discourse_rankings.shape[0] - 1
 
-    styled_rankings = style_rankings(discourse_rankings, selected_models)
-
-    st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    if discourse_rankings.shape[0] > 1:
+        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **{filter_string}**")
+        styled_rankings = style_rankings(discourse_rankings, selected_models)
+        st.write(styled_rankings.to_html(), unsafe_allow_html=True)
+    else:
+        st.text("No rows match, please change filter string")
 
 
