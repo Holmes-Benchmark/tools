@@ -22,12 +22,14 @@ st.markdown("""
 
 
 
-def update_rankings(rankings, selected_models, add_average=True):
+def update_rankings(rankings, selected_models, add_average=True, sort_by="probing dataset"):
     rankings[selected_models] = rankings[selected_models] * 100
 
     mean_ranking = rankings[selected_models].mean(axis=0).values
     rankings["deviation"] = rankings[selected_models].std(axis=1)
     rankings["discriminability"] = rankings.apply(lambda row: kendalltau(mean_ranking, row[selected_models].values).pvalue, axis=1).fillna(0)
+
+    rankings = rankings.sort_values(sort_by)
 
     if add_average:
         average = dict(rankings.mean(numeric_only=True))
@@ -188,11 +190,15 @@ st.markdown("""
 
 tab_morphology, tab_syntax, tab_semantics, tab_reasoning, tab_discourse = st.tabs(["Morphology", "Syntax", "Semantics", "Reasoning", "Discourse"])
 
+sort_by = st.selectbox(
+    "Select Columns to Sort",
+    ["probing dataset", "linguistic phenomena"] + selected_models + ["deviation", "discriminability"]
+)
 
 with tab_morphology:
     morphology_rankings = rankings[rankings["linguistic competencies"] == "morphology"]
     morphology_rankings = morphology_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    morphology_rankings = update_rankings(morphology_rankings, selected_models)
+    morphology_rankings = update_rankings(morphology_rankings, selected_models, sort_by=sort_by)
 
     styled_rankings = style_rankings(morphology_rankings, selected_models)
 
@@ -203,7 +209,7 @@ with tab_morphology:
 with tab_syntax:
     syntax_rankings = rankings[rankings["linguistic competencies"] == "syntax"]
     syntax_rankings = syntax_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    syntax_rankings = update_rankings(syntax_rankings, selected_models)
+    syntax_rankings = update_rankings(syntax_rankings, selected_models, sort_by=sort_by)
 
     styled_rankings = style_rankings(syntax_rankings, selected_models)
 
@@ -213,7 +219,7 @@ with tab_syntax:
 with tab_semantics:
     semantics_rankings = rankings[rankings["linguistic competencies"] == "semantics"]
     semantics_rankings = semantics_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    semantics_rankings = update_rankings(semantics_rankings, selected_models)
+    semantics_rankings = update_rankings(semantics_rankings, selected_models, sort_by=sort_by)
 
     styled_rankings = style_rankings(semantics_rankings, selected_models)
 
@@ -223,7 +229,7 @@ with tab_semantics:
 with tab_reasoning:
     reasoning_rankings = rankings[rankings["linguistic competencies"] == "reasoning"]
     reasoning_rankings = reasoning_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    reasoning_rankings = update_rankings(reasoning_rankings, selected_models)
+    reasoning_rankings = update_rankings(reasoning_rankings, selected_models, sort_by=sort_by)
 
     styled_rankings = style_rankings(reasoning_rankings, selected_models)
 
@@ -233,7 +239,7 @@ with tab_reasoning:
 with tab_discourse:
     discourse_rankings = rankings[rankings["linguistic competencies"] == "discourse"]
     discourse_rankings = discourse_rankings[["probing dataset", "linguistic phenomena"] + selected_models]
-    discourse_rankings = update_rankings(discourse_rankings, selected_models)
+    discourse_rankings = update_rankings(discourse_rankings, selected_models, sort_by=sort_by)
 
     styled_rankings = style_rankings(discourse_rankings, selected_models)
 
