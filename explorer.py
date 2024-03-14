@@ -71,7 +71,7 @@ with st.expander("Overall results", expanded=True):
 
 
 
-    col1, col2, col3 = st.tabs(3)
+    col1, col2, col3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
 
     with col1:
         st.multiselect(
