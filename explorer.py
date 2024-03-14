@@ -14,7 +14,9 @@ st.markdown("""
     
     ### Overall Results
     
-    This part shows you how the different language models perform. We report the `mean winning rate` regarding the selected `linguistic competencies`, `linguistic phenomena`, or `probing datasets`. Note, these plots are not connected to each other. You can select syntax phenomena while inspecting all `competencies` on the same time. 
+    This part shows you how the different language models perform. 
+    You can analyze the `mean winning rate` of the selected language models for `linguistic competencies`, `linguistic phenomena`, or `probing datasets`.
+    Note, these plots are not connected to each other. You can select syntax phenomena while inspecting all `competencies` on the same time. 
 
 """)
 
