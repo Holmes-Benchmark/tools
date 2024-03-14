@@ -221,7 +221,8 @@ with tab_morphology:
     n_filtered_datasets = morphology_rankings.shape[0] - 1
 
     if morphology_rankings.shape[0] > 1:
-        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
+        if len(filter_string) > 0:
+            st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
         styled_rankings = style_rankings(morphology_rankings, selected_models)
         st.write(styled_rankings.to_html(), unsafe_allow_html=True)
     else:
@@ -237,7 +238,8 @@ with tab_syntax:
     n_filtered_datasets = syntax_rankings.shape[0] - 1
 
     if syntax_rankings.shape[0] > 1:
-        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
+        if len(filter_string) > 0:
+            st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
         styled_rankings = style_rankings(syntax_rankings, selected_models)
         st.write(styled_rankings.to_html(), unsafe_allow_html=True)
     else:
@@ -252,7 +254,8 @@ with tab_semantics:
     n_filtered_datasets = semantics_rankings.shape[0] - 1
 
     if semantics_rankings.shape[0] > 1:
-        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **{filter_string}**")
+        if len(filter_string) > 0:
+            st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
         styled_rankings = style_rankings(semantics_rankings, selected_models)
         st.write(styled_rankings.to_html(), unsafe_allow_html=True)
     else:
@@ -267,7 +270,8 @@ with tab_reasoning:
     n_filtered_datasets = reasoning_rankings.shape[0] - 1
 
     if reasoning_rankings.shape[0] > 1:
-        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **{filter_string}**")
+        if len(filter_string) > 0:
+            st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
         styled_rankings = style_rankings(reasoning_rankings, selected_models)
         st.write(styled_rankings.to_html(), unsafe_allow_html=True)
     else:
@@ -281,7 +285,8 @@ with tab_discourse:
     n_filtered_datasets = discourse_rankings.shape[0] - 1
 
     if discourse_rankings.shape[0] > 1:
-        st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **{filter_string}**")
+        if len(filter_string) > 0:
+            st.markdown(f"{n_filtered_datasets} out of {n_datasets} probing datasets matched **_{filter_string}_**")
         styled_rankings = style_rankings(discourse_rankings, selected_models)
         st.write(styled_rankings.to_html(), unsafe_allow_html=True)
     else:
