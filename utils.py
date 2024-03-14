@@ -1,7 +1,8 @@
 import pandas
-from scipy.stats import kendalltau
-import streamlit as st
 import plotly.express as px
+import streamlit as st
+from scipy.stats import kendalltau
+
 
 def aggregate_results(data, target_property):
     aggregation = data.melt(

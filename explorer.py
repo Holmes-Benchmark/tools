@@ -1,16 +1,7 @@
-import json
-import random
-from collections import defaultdict
 import pandas
-import streamlit as st
 import seaborn as sns
-import plotly.express as px
+import streamlit as st
 from scipy.stats import kendalltau
-from st_aggrid import AgGrid, AgGridTheme
-from pandas.io.formats.style import Styler
-
-from st_keyup import st_keyup
-import redis
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 

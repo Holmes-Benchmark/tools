@@ -1,18 +1,7 @@
-import json
-import random
-from collections import defaultdict
 import pandas
-import plotly.express as px
-
 import streamlit as st
-import plotly.express as px
-from scipy.stats import kendalltau
-from st_aggrid import AgGrid, AgGridTheme
 
-from st_keyup import st_keyup
-import redis
-
-from utils import read_data, get_rankings, aggregate_results
+from utils import read_data, get_rankings
 
 st.set_page_config(layout="wide")
 st.title("Holmes Leaderboard")
