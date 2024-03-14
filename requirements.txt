@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy
+streamlit-keyup
+redis
+plotly
+streamlit-aggrid
+scipy
+st-click-detector
+matplotlib
+seaborn
