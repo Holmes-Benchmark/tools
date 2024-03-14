@@ -5,8 +5,6 @@ from scipy.stats import kendalltau
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot
 
-if 'sidebar_state' not in st.session_state:
-    st.session_state.sidebar_state = 'expanded'
 
 st.set_page_config(layout="wide")
 st.title("Holmes Explorer")
@@ -56,32 +54,12 @@ if "data" not in st.session_state:
     st.session_state["aggregated_by_phenomena"] = aggregate_results(st.session_state["rankings_f1"], target_property= 'linguistic phenomena')
     st.session_state["aggregated_by_datasets"] = aggregate_results(st.session_state["rankings_f1"], target_property='probing dataset')
 
-st.sidebar.multiselect(
+
+st.multiselect(
     label="Select models to compare",
     options=st.session_state["models"],
     key="selected_models",
     default=["google/ul2", "google/flan-ul2", "bert-base-uncased", "EleutherAI/pythia-12b"]
-)
-
-st.sidebar.multiselect(
-    label="Select linguistic competencies to analyze",
-    options=st.session_state["linguistic_competencies"],
-    key="selected_competencies",
-    default=st.session_state["linguistic_competencies"]
-)
-
-st.sidebar.multiselect(
-    label="Select linguistic phenomena to analyze",
-    options=st.session_state["linguistic_phenomena"],
-    key="selected_phenomena",
-    default=["negation", "part-of-speech", "binding"]
-)
-
-st.sidebar.multiselect(
-    label="Select datasets to analyze",
-    options=st.session_state["probing_datasets"],
-    key="selected_datasets",
-    default=["pos", "xpos", "upos"]
 )
 
 
@@ -89,27 +67,52 @@ st.sidebar.multiselect(
 with st.expander("Overall results", expanded=True):
 
     selected_models = st.session_state["selected_models"]
-    relevant_competencies_data = st.session_state["aggregated_by_competencies"][st.session_state["aggregated_by_competencies"]["model"].isin(selected_models)]
-    relevant_competencies_data = relevant_competencies_data[relevant_competencies_data['linguistic competencies'].isin(st.session_state["selected_competencies"])]
-
-    relevant_phenomena_data = st.session_state["aggregated_by_phenomena"][st.session_state["aggregated_by_phenomena"]["model"].isin(selected_models)]
-    relevant_phenomena_data = relevant_phenomena_data[relevant_phenomena_data['linguistic phenomena'].isin(st.session_state["selected_phenomena"])]
-
-    relevant_dataset_data = st.session_state["aggregated_by_datasets"][st.session_state["aggregated_by_datasets"]["model"].isin(selected_models)]
-    relevant_dataset_data = relevant_dataset_data[relevant_dataset_data['probing dataset'].isin(st.session_state["selected_datasets"])]
 
 
-    col1, col2, col3 = st.columns(3)
+
+
+    col1, col2, col3 = st.tabs(3)
 
     with col1:
+        st.multiselect(
+            label="Select linguistic competencies to analyze",
+            options=st.session_state["linguistic_competencies"],
+            key="selected_competencies",
+            default=st.session_state["linguistic_competencies"]
+        )
+
+        relevant_competencies_data = st.session_state["aggregated_by_competencies"][st.session_state["aggregated_by_competencies"]["model"].isin(selected_models)]
+        relevant_competencies_data = relevant_competencies_data[relevant_competencies_data['linguistic competencies'].isin(st.session_state["selected_competencies"])]
+
         fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Competencies Comparison")
         st.plotly_chart(fig)
 
     with col2:
+        st.multiselect(
+            label="Select linguistic phenomena to analyze",
+            options=st.session_state["linguistic_phenomena"],
+            key="selected_phenomena",
+            default=["negation", "part-of-speech", "binding"]
+        )
+
+        relevant_phenomena_data = st.session_state["aggregated_by_phenomena"][st.session_state["aggregated_by_phenomena"]["model"].isin(selected_models)]
+        relevant_phenomena_data = relevant_phenomena_data[relevant_phenomena_data['linguistic phenomena'].isin(st.session_state["selected_phenomena"])]
+
         fig = get_polar_plot(data=relevant_phenomena_data, target_column='linguistic phenomena', title="Phenomena Comparison")
         st.plotly_chart(fig)
 
     with col3:
+
+        st.multiselect(
+            label="Select datasets to analyze",
+            options=st.session_state["probing_datasets"],
+            key="selected_datasets",
+            default=["pos", "xpos", "upos"]
+        )
+
+        relevant_dataset_data = st.session_state["aggregated_by_datasets"][st.session_state["aggregated_by_datasets"]["model"].isin(selected_models)]
+        relevant_dataset_data = relevant_dataset_data[relevant_dataset_data['probing dataset'].isin(st.session_state["selected_datasets"])]
+
         fig = get_polar_plot(data=relevant_dataset_data, target_column='probing dataset', title="Dataset Comparison")
         st.plotly_chart(fig)
 
