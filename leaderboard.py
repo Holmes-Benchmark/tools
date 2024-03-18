@@ -13,15 +13,11 @@ st.set_page_config(
 st.image("images/holmes_leaderboard.svg", width=400)
 st.markdown("""
     This is the leaderboard of the Holmes 🔎 benchmark. 
-    We report for the every language models its averaged rank.
-    Either considering all probing datasets or one of the five groups of specific linguistic competencies.
-    
-    You can select either Holmes 🔎 or it streamlined version FlashHolmes ⚡.
-    Further, you can choose to consider only non licensed datasets or all of them, and how you wish to sort the table.
+    You can choose to consider only non licensed datasets or all of them, and how you wish to sort the table.
 """)
 
 
-holmes_version = st.selectbox("Select Holmes Version", options=["Holmes", "FlashHolmes"])
+holmes_version = st.selectbox("Select Holmes Version", options=["Holmes 🔎 - Our comprehensive version", "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind"])
 free_holmes = st.checkbox("Only Freely-Available Datasets")
 
 sort_by = st.selectbox(
@@ -90,58 +86,58 @@ parameters = {
 architecture = {
     'sentence-transformers/average_word_embeddings_glove.6B.300d': "static",
     'sentence-transformers/average_word_embeddings_glove.840B.300d': "static",
-    'microsoft/phi-2': "decoder",
-    'EleutherAI/gpt-j-6b': "decoder",
-    'EleutherAI/pythia-1b': "decoder",
-    'EleutherAI/pythia-1b-deduped': "decoder",
-    'EleutherAI/pythia-1.4b': "decoder",
-    'EleutherAI/pythia-1.4b-deduped': "decoder",
-    'EleutherAI/pythia-12b': "decoder",
-    'EleutherAI/pythia-12b-deduped': "decoder",
-    'EleutherAI/pythia-160m': "decoder",
-    'EleutherAI/pythia-160m-deduped': "decoder",
-    'EleutherAI/pythia-2.8b': "decoder",
-    'EleutherAI/pythia-2.8b-deduped': "decoder",
-    'EleutherAI/pythia-410m': "decoder",
-    'EleutherAI/pythia-410m-deduped': "decoder",
-    'EleutherAI/pythia-6.9b': "decoder",
-    'EleutherAI/pythia-6.9b-deduped': "decoder",
-    'EleutherAI/pythia-70m': "decoder",
-    'EleutherAI/pythia-70m-deduped': "decoder",
-    'albert-base-v2': "encoder",
-    'bert-base-uncased': "encoder",
-    'google/electra-base-discriminator': "encoder",
-    'google/flan-t5-xxl': "encoder-decoder",
-    'google/flan-t5-base': "encoder-decoder",
-    'google/flan-t5-small': "encoder-decoder",
-    'google/flan-t5-large': "encoder-decoder",
-    'google/flan-t5-xl': "encoder-decoder",
-    'google/flan-ul2': "encoder-decoder",
-    'google/t5-base-lm-adapt': "encoder-decoder",
-    'google/t5-small-lm-adapt': "encoder-decoder",
-    'google/t5-large-lm-adapt': "encoder-decoder",
-    'google/t5-xl-lm-adapt': "encoder-decoder",
-    'google/t5-xxl-lm-adapt': "encoder-decoder",
-    'google/ul2': "encoder-decoder",
-    'gpt2': "decoder",
-    'facebook/bart-base': "encoder",
-    'meta-llama/Llama-2-13b-chat-hf': "decoder",
-    'meta-llama/Llama-2-13b-hf': "decoder",
-    'meta-llama/Llama-2-70b-chat-hf': "decoder",
-    'meta-llama/Llama-2-70b-hf': "decoder",
-    'meta-llama/Llama-2-7b-chat-hf': "decoder",
-    'meta-llama/Llama-2-7b-hf': "decoder",
-    'microsoft/deberta-base': "encoder",
-    'microsoft/deberta-v3-base': "encoder",
-    'roberta-base': "encoder",
-    'databricks/dolly-v2-12b': "decoder",
-    'allenai/tk-instruct-11b-def': "encoder-decoder",
-    'allenai/tulu-2-dpo-13b': "decoder",
-    'allenai/tulu-2-13b': "decoder",
-    'microsoft/Orca-2-13b': "decoder",
-    'lmsys/vicuna-13b-v1.5': "decoder",
-    'mistralai/Mixtral-8x7B-Instruct-v0.1': "decoder",
-    'mistralai/Mixtral-8x7B-v0.1': "decoder",
+    'microsoft/phi-2': "Dec",
+    'EleutherAI/gpt-j-6b': "Dec",
+    'EleutherAI/pythia-1b': "Dec",
+    'EleutherAI/pythia-1b-deduped': "Dec",
+    'EleutherAI/pythia-1.4b': "Dec",
+    'EleutherAI/pythia-1.4b-deduped': "Dec",
+    'EleutherAI/pythia-12b': "Dec",
+    'EleutherAI/pythia-12b-deduped': "Dec",
+    'EleutherAI/pythia-160m': "Dec",
+    'EleutherAI/pythia-160m-deduped': "Dec",
+    'EleutherAI/pythia-2.8b': "Dec",
+    'EleutherAI/pythia-2.8b-deduped': "Dec",
+    'EleutherAI/pythia-410m': "Dec",
+    'EleutherAI/pythia-410m-deduped': "Dec",
+    'EleutherAI/pythia-6.9b': "Dec",
+    'EleutherAI/pythia-6.9b-deduped': "Dec",
+    'EleutherAI/pythia-70m': "Dec",
+    'EleutherAI/pythia-70m-deduped': "Dec",
+    'albert-base-v2': "Enc",
+    'bert-base-uncased': "Enc",
+    'google/electra-base-discriminator': "Enc",
+    'google/flan-t5-xxl': "Enc-Dec",
+    'google/flan-t5-base': "Enc-Dec",
+    'google/flan-t5-small': "Enc-Dec",
+    'google/flan-t5-large': "Enc-Dec",
+    'google/flan-t5-xl': "Enc-Dec",
+    'google/flan-ul2': "Enc-Dec",
+    'google/t5-base-lm-adapt': "Enc-Dec",
+    'google/t5-small-lm-adapt': "Enc-Dec",
+    'google/t5-large-lm-adapt': "Enc-Dec",
+    'google/t5-xl-lm-adapt': "Enc-Dec",
+    'google/t5-xxl-lm-adapt': "Enc-Dec",
+    'google/ul2': "Enc-Dec",
+    'gpt2': "Dec",
+    'facebook/bart-base': "Enc",
+    'meta-llama/Llama-2-13b-chat-hf': "Dec",
+    'meta-llama/Llama-2-13b-hf': "Dec",
+    'meta-llama/Llama-2-70b-chat-hf': "Dec",
+    'meta-llama/Llama-2-70b-hf': "Dec",
+    'meta-llama/Llama-2-7b-chat-hf': "Dec",
+    'meta-llama/Llama-2-7b-hf': "Dec",
+    'microsoft/deberta-base': "Enc",
+    'microsoft/deberta-v3-base': "Enc",
+    'roberta-base': "Enc",
+    'databricks/dolly-v2-12b': "Dec",
+    'allenai/tk-instruct-11b-def': "Enc-Dec",
+    'allenai/tulu-2-dpo-13b': "Dec",
+    'allenai/tulu-2-13b': "Dec",
+    'microsoft/Orca-2-13b': "Dec",
+    'lmsys/vicuna-13b-v1.5': "Dec",
+    'mistralai/Mixtral-8x7B-Instruct-v0.1': "Dec",
+    'mistralai/Mixtral-8x7B-v0.1': "Dec",
 }
 
 
@@ -150,8 +146,8 @@ if free_holmes:
 
 if "data" not in st.session_state:
     st.session_state["raw_data"] = {
-        "Holmes": read_data("data/holmes_results_f1_raw_v4.0.csv"),
-        "FlashHolmes": read_data("data/holmes_results_f1_raw_v4.0.csv", train_portions=[0.0625]),
+        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1_raw_v4.0.csv"),
+        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind": read_data("data/holmes_results_f1_raw_v4.0.csv", train_portions=[0.0625]),
         "FreeHolmes": read_data("data/holmes_results_f1_raw_free_v4.0.csv"),
         "FreeFlashHolmes": read_data("data/holmes_results_f1_raw_free_v4.0.csv", train_portions=[0.0625]),
         #"f1_std": read_data("data/holmes_results_f1-std.csv"),
@@ -186,11 +182,11 @@ def style_leaderboard(leaderboard):
 
     formats = {}
 
-    for scope in ["overall", "discourse", "morphology", "reasoning", "semantics", "syntax"]:
+    for scope in ["Overall", "Discourse", "Morphology", "Reasoning", "Semantics", "Syntax"]:
         formats[scope] = "{:.1f}"
 
     colored_leaderboard = leaderboard.style.format(formats) \
-        .background_gradient(cmap='Blues', subset=["overall", "discourse", "morphology", "reasoning", "semantics", "syntax"], axis=0)
+        .background_gradient(cmap='Blues', subset=["Overall", "Discourse", "Morphology", "Reasoning", "Semantics", "Syntax"], axis=0)
 
     styled_leaderboard = colored_leaderboard.set_table_styles([
         {'selector': 'thead', 'props': 'border-top: 5px solid rgba(49, 51, 63, 0.2)'},
@@ -202,6 +198,8 @@ def style_leaderboard(leaderboard):
 
 with st.expander("Leaderboard", expanded=True):
     leaderboard = leaderboard.sort_values(sort_by, ascending=False)
+
+    leaderboard.columns = ['Model', 'Architecture', 'Params', "Overall", "Discourse", "Morphology", "Reasoning", "Semantics", "Syntax"]
 
     styled_leaderboard = style_leaderboard(leaderboard)
 
