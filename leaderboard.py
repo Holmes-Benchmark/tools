@@ -120,7 +120,7 @@ architecture = {
     'google/t5-xxl-lm-adapt': "Enc-Dec",
     'google/ul2': "Enc-Dec",
     'gpt2': "Dec",
-    'facebook/bart-base': "Enc",
+    'facebook/bart-base': "Enc-Dec",
     'meta-llama/Llama-2-13b-chat-hf': "Dec",
     'meta-llama/Llama-2-13b-hf': "Dec",
     'meta-llama/Llama-2-70b-chat-hf': "Dec",
